@@ -11,10 +11,6 @@ internal class DeleteOldFiles
 {
 	public void Delete(int days, string path)
 	{
-		if (days <= 0)
-		{
-			return;
-		}
 		MainWindow.BGThread = (new Thread(() =>
 		{
 			var Progress = new ProgressController();

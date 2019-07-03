@@ -709,6 +709,7 @@
 			<Grid
 				x:Name="FolderGrid"
 				Grid.Row="1"
+				Visibility="Collapsed"
 				Grid.Column="1">
 
 				<!--  Visibility="Collapsed"  -->

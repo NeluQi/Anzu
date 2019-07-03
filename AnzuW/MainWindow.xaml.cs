@@ -240,7 +240,21 @@ namespace Anzu
 		private void Button_Click_DownloadDelOld(object sender, RoutedEventArgs e)
 		{
 			var dk = new DeleteOldFiles();
-			dk.Delete(Convert.ToInt32(OldDayTextBox.Text), KnownFolders.GetPath(KnownFolder.Downloads));
+			int day = -1;
+			try
+			{
+				day = Convert.ToInt32(OldDayTextBox.Text);
+				if (day <= 0 || day >= 1000)
+				{
+					throw new Exception("Not valid days");
+				}
+				dk.Delete(day, KnownFolders.GetPath(KnownFolder.Downloads));
+			}
+			catch (Exception)
+			{
+				MessageBox.Show("Not valid days", "Error",
+				MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 
 		/// <summary>
@@ -273,7 +287,21 @@ namespace Anzu
 					path = dlg.SelectedPath + @"\";
 
 					var sk = new DeleteOldFiles();
-					sk.Delete(Convert.ToInt32(FOldDayTextBox.Text), path);
+					int day = -1;
+					try
+					{
+						day = Convert.ToInt32(FOldDayTextBox.Text);
+						if (day <= 0 || day >= 1000)
+						{
+							throw new Exception("Not valid days");
+						}
+						sk.Delete(day, path);
+					}
+					catch (Exception)
+					{
+						MessageBox.Show("Not valid days", "Error",
+						MessageBoxButton.OK, MessageBoxImage.Error);
+					}
 				}
 			}
 		}
@@ -332,7 +360,21 @@ namespace Anzu
 				if (System.IO.Directory.Exists(path))
 				{
 					var sk = new DeleteOldFiles();
-					sk.Delete(Convert.ToInt32(FOldDayTextBox.Text), path);
+					int day = -1;
+					try
+					{
+						day = Convert.ToInt32(FOldDayTextBox.Text);
+						if (day <= 0 || day >= 1000)
+						{
+							throw new Exception("Not valid days");
+						}
+						sk.Delete(day, path);
+					}
+					catch (Exception)
+					{
+						MessageBox.Show("Not valid days", "Error",
+						MessageBoxButton.OK, MessageBoxImage.Error);
+					}
 				}
 			}
 		}
