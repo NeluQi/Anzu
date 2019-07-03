@@ -55,10 +55,6 @@ internal class Backup
 					{
 						switch (e.EventType)
 						{
-							case ZipProgressEventType.Saving_Started:
-								Progress.SetMax(DeleteFile == true ? e.EntriesTotal * 2 : e.EntriesTotal);
-								break;
-
 							case ZipProgressEventType.Saving_AfterRenameTempArchive:
 								Progress.AddLog("Done");
 								Progress.AddLog("Archive size (byte):" + new FileInfo(e.ArchiveName).Length.ToString());
@@ -74,6 +70,7 @@ internal class Backup
 								break;
 
 							case ZipProgressEventType.Saving_AfterWriteEntry:
+								Progress.SetMax(e.EntriesTotal);
 								Progress.AddLog("Done:" + e.CurrentEntry.FileName);
 								Progress.SetText(e.EntriesSaved + "/" + e.EntriesTotal);
 								Progress.SetProgress(e.EntriesSaved);

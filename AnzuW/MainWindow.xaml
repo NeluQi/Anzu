@@ -817,7 +817,6 @@
 					DragEnter="Border_DragEnter_1"
 					DragLeave="Border_DragLeave_1"
 					Drop="Border_Drop_1">
-					<Border.ToolTip>FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF</Border.ToolTip>
 				</Border>
 				<!--  Visibility="Collapsed"  -->
 				<CheckBox
