@@ -20,17 +20,25 @@ public class ProgressController
 	/// </summary>
 	public static MainWindow MainWindow { get; set; }
 
+	private int Line = 0;
+
 	/// <summary>
 	/// Add line to log panel
 	/// </summary>
 	/// <param name="log">String</param>
 	public void AddLog(string log)
 	{
-		Console.WriteLine(log);
+		//Console.WriteLine(log);
 		MainWindow.Dispatcher.Invoke(new Action(() =>
 		{
 			MainWindow.OutputBlock.Text += log + Environment.NewLine;
+			Line++;
 			MainWindow.OutputBlockScroll.ScrollToEnd();
+			if (Line > 300)
+			{
+				MainWindow.OutputBlock.Text = log + Environment.NewLine;
+				Line = 0;
+			}
 		}));
 	}
 
