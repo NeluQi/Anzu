@@ -5,7 +5,7 @@
 
 Anzu is a small tool for organizing files in Windows 10.
 
-###### The program has a functional:
+#### The program has a functional:
 **Desktop**:
 - *Backup desktop*. If you use the desktop as a "buffer" for files that are not really needed over time, but it’s a pity to delete, then this is a function for you. It will add all the files from the desktop to the archive and put it in the folder you selected in the settings.
 - *Sorting*. Sorts the desktop by file type (If you put a checkbox, a folder will be created for each extension)
