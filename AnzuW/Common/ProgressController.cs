@@ -8,6 +8,7 @@
 using Anzu;
 using System;
 using System.Windows;
+using System.Windows.Media;
 
 /// <summary>
 ///Controller for progress bar
@@ -56,6 +57,14 @@ public class ProgressController
 			MainWindow.ProgressStopbtn.IsEnabled = false;
 			MainWindow.DoneProgress.Visibility = Visibility.Visible;
 			MainWindow.TextDoneProgress.Content = text;
+			if (text == "Successfully")
+			{
+				MainWindow.TextDoneProgress.Foreground = Brushes.Green;
+			}
+			else
+			{
+				MainWindow.TextDoneProgress.Foreground = Brushes.Red;
+			}
 			MainWindow.ProgressBar.Value = MainWindow.ProgressBar.Maximum;
 		}));
 	}

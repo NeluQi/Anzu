@@ -14,6 +14,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
+
+using WinForms = System.Windows.Forms;
 
 /// <summary>
 ///
@@ -28,6 +32,13 @@ internal class Backup
 			Progress.ShowProgressBar();
 			try
 			{
+				if (!Directory.Exists(Anzu.Properties.Settings.Default.MainBackupFolder))
+				{
+					System.Windows.MessageBox.Show("Backup folder not found on disk, set new folder in settings", "Error",
+					MessageBoxButton.OK, MessageBoxImage.Error);
+					throw new Exception("Backup folder not found on disk, set new folder in settings");
+				}
+
 				string zipPath = Anzu.Properties.Settings.Default.MainBackupFolder + Name + " " + DateTime.Now.ToString("dd.MM.yyyy (hh-mm)") + ".zip";
 				Progress.AddLog("Backup to " + zipPath);
 
