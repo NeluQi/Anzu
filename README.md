@@ -1,9 +1,8 @@
 # Anzu for Windows 10
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![](https://img.shields.io/badge/Beta-1.0-green.svg)
 
-[![Download](https://img.shields.io/badge/Download-for%20windows-brightgreen.svg)](https://github.com/NeluQi/Anzu/releases)
+[![Download](https://img.shields.io/badge/Download-windows-brightgreen.svg)](https://github.com/NeluQi/Anzu/releases)
 
 Anzu is a small tool for organizing files in Windows 10.
 
