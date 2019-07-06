@@ -1,44 +1,77 @@
-#region copyright
-
-// (c) 2019 Nelu & 601 (github.com/NeluQi)
+﻿// (c) 2019 Nelu & 601 (github.com/NeluQi)
 // This code is licensed under MIT license (see LICENSE for details)
 
-#endregion copyright
-
-using Anzu;
 using System.Windows;
 
+using Anzu;
+
 /// <summary>
-///
+/// Defines the <see cref="WindowController" />
 /// </summary>
-internal class WindowController
-{
+internal class WindowController {
+	/// <summary>
+	/// Defines the ActiveWindow
+	/// </summary>
 	private static Windows ActiveWindow = Windows.NULL;
+
+	/// <summary>
+	/// Defines the Form
+	/// </summary>
 	private MainWindow Form = Application.Current.Windows[0] as MainWindow;
 
-	public WindowController(Windows SelectWindow)
-	{
-		if (SelectWindow == ActiveWindow)
+	/// <summary>
+	/// Initializes a new instance of the <see cref="WindowController"/> class.
+	/// </summary>
+	/// <param name="SelectWindow">The SelectWindow<see cref="Windows"/></param>
+	public WindowController(Windows SelectWindow) {
+		if(SelectWindow == ActiveWindow)
 			return;
 		Hide(ActiveWindow);
 		Show(SelectWindow);
 		ActiveWindow = SelectWindow;
 	}
 
-	public enum Windows
-	{
+	/// <summary>
+	/// Defines the Windows
+	/// </summary>
+	public enum Windows {
+		/// <summary>
+		/// Defines the Desktop
+		/// </summary>
 		Desktop,
+
+		/// <summary>
+		/// Defines the Download
+		/// </summary>
 		Download,
+
+		/// <summary>
+		/// Defines the Folder
+		/// </summary>
 		Folder,
+
+		/// <summary>
+		/// Defines the File
+		/// </summary>
 		File,
+
+		/// <summary>
+		/// Defines the Settings
+		/// </summary>
 		Settings,
+
+		/// <summary>
+		/// Defines the NULL
+		/// </summary>
 		NULL
 	}
 
-	private void Hide(Windows win)
-	{
-		switch (win)
-		{
+	/// <summary>
+	/// The Hide
+	/// </summary>
+	/// <param name="win">The win<see cref="Windows"/></param>
+	private void Hide(Windows win) {
+		switch(win) {
 			case Windows.Desktop:
 				Form.DesktopGrid.Visibility = Visibility.Collapsed;
 				Form.btnDesktop.IsEnabled = true;
@@ -76,10 +109,12 @@ internal class WindowController
 		}
 	}
 
-	private void Show(Windows win)
-	{
-		switch (win)
-		{
+	/// <summary>
+	/// The Show
+	/// </summary>
+	/// <param name="win">The win<see cref="Windows"/></param>
+	private void Show(Windows win) {
+		switch(win) {
 			case Windows.Desktop:
 				Form.DesktopGrid.Visibility = Visibility.Visible;
 				Form.btnDesktop.IsEnabled = false;

@@ -1,41 +1,38 @@
-#region copyright
-
-// (c) 2019 Nelu & 601 (github.com/NeluQi)
+﻿// (c) 2019 Nelu & 601 (github.com/NeluQi)
 // This code is licensed under MIT license (see LICENSE for details)
 
-#endregion copyright
-
-using Anzu;
 using System;
 using System.Windows;
 using System.Windows.Media;
 
+using Anzu;
+
 /// <summary>
-///Controller for progress bar
+/// Controller for progress bar
 /// </summary>
-public class ProgressController
-{
+public class ProgressController {
 	/// <summary>
+	/// Gets or sets the MainWindow
 	/// Main window
 	/// </summary>
 	public static MainWindow MainWindow { get; set; }
 
+	/// <summary>
+	/// Defines the Line
+	/// </summary>
 	private int Line = 0;
 
 	/// <summary>
 	/// Add line to log panel
 	/// </summary>
 	/// <param name="log">String</param>
-	public void AddLog(string log)
-	{
+	public void AddLog(string log) {
 		//Console.WriteLine(log);
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.OutputBlock.Text += log + Environment.NewLine;
 			Line++;
 			MainWindow.OutputBlockScroll.ScrollToEnd();
-			if (Line > 300)
-			{
+			if(Line > 300) {
 				MainWindow.OutputBlock.Text = log + Environment.NewLine;
 				Line = 0;
 			}
@@ -46,10 +43,8 @@ public class ProgressController
 	/// Add value progress bar
 	/// </summary>
 	/// <param name="progress"></param>
-	public void AddProgress(int progress)
-	{
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+	public void AddProgress(int progress) {
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.ProgressBar.Value += progress;
 		}));
 	}
@@ -58,19 +53,15 @@ public class ProgressController
 	/// Hide progress bar in UI and show done windows and custom text
 	/// </summary>
 	/// <param name="text">Text message</param>
-	public void HideProgressBar(string text = "Successfully")
-	{
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+	public void HideProgressBar(string text = "Successfully") {
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.ProgressStopbtn.IsEnabled = false;
 			MainWindow.DoneProgress.Visibility = Visibility.Visible;
 			MainWindow.TextDoneProgress.Content = text;
-			if (text == "Successfully")
-			{
+			if(text == "Successfully") {
 				MainWindow.TextDoneProgress.Foreground = Brushes.Green;
 			}
-			else
-			{
+			else {
 				MainWindow.TextDoneProgress.Foreground = Brushes.Red;
 			}
 			MainWindow.ProgressBar.Value = MainWindow.ProgressBar.Maximum;
@@ -80,10 +71,8 @@ public class ProgressController
 	/// <summary>
 	/// Increase bar progress by 1 value
 	/// </summary>
-	public void Inc()
-	{
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+	public void Inc() {
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.ProgressBar.Value++;
 		}));
 	}
@@ -92,10 +81,8 @@ public class ProgressController
 	/// Set maximum for progress bar
 	/// </summary>
 	/// <param name="MAX">MAX</param>
-	public void SetMax(int MAX)
-	{
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+	public void SetMax(int MAX) {
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.ProgressBar.Maximum = MAX;
 		}));
 	}
@@ -104,10 +91,8 @@ public class ProgressController
 	/// Set minimum for progress bar
 	/// </summary>
 	/// <param name="MIN">MIN</param>
-	public void SetMin(int MIN)
-	{
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+	public void SetMin(int MIN) {
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.ProgressBar.Minimum = MIN;
 		}));
 	}
@@ -116,10 +101,8 @@ public class ProgressController
 	/// Set value progress bar
 	/// </summary>
 	/// <param name="progress">value</param>
-	public void SetProgress(int progress)
-	{
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+	public void SetProgress(int progress) {
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.ProgressBar.Value = progress;
 		}));
 	}
@@ -128,10 +111,8 @@ public class ProgressController
 	/// Set text above progress bar
 	/// </summary>
 	/// <param name="text">text</param>
-	public void SetText(string text)
-	{
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+	public void SetText(string text) {
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.ProgressText.Content = text;
 		}));
 	}
@@ -139,10 +120,8 @@ public class ProgressController
 	/// <summary>
 	/// Show progress bar in UI
 	/// </summary>
-	public void ShowProgressBar()
-	{
-		MainWindow.Dispatcher.Invoke(new Action(() =>
-		{
+	public void ShowProgressBar() {
+		MainWindow.Dispatcher.Invoke(new Action(() => {
 			MainWindow.DoneProgress.Visibility = Visibility.Collapsed;
 			MainWindow.ProgressBar.Maximum = 100;
 			MainWindow.ProgressBar.Minimum = 0;

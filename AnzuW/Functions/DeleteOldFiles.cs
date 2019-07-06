@@ -1,44 +1,41 @@
-﻿using Anzu;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-internal class DeleteOldFiles
-{
-	public void Delete(int days, string path)
-	{
-		MainWindow.BGThread = (new Thread(() =>
-		{
+using Anzu;
+
+/// <summary>
+/// Defines the <see cref="DeleteOldFiles" />
+/// </summary>
+internal class DeleteOldFiles {
+	/// <summary>
+	/// The Delete
+	/// </summary>
+	/// <param name="days">The days<see cref="int"/></param>
+	/// <param name="path">The path<see cref="string"/></param>
+	public void Delete(int days, string path) {
+		MainWindow.BGThread = (new Thread(() => {
 			var Progress = new ProgressController();
 			Progress.ShowProgressBar();
 
-			try
-			{
-				if (!Directory.Exists(path))
+			try {
+				if(!Directory.Exists(path))
 					throw new ArgumentNullException("path not exists", nameof(path));
 
 				var dir = new DirectoryInfo(path);
 				var FileList = dir.GetFiles();
 				int iCnt = 0;
 
-				foreach (var file in FileList)
-				{
+				foreach(var file in FileList) {
 					file.Refresh();
-					try
-					{
-						if (file.LastAccessTime <= DateTime.Now.AddDays(-days))
-						{
+					try {
+						if(file.LastAccessTime <= DateTime.Now.AddDays(-days)) {
 							Progress.AddLog("Deleting:" + file.Name);
 							file.Delete();
 							iCnt += 1;
 						}
 					}
-					catch (Exception)
-					{
+					catch(Exception) {
 						Progress.AddLog("Error");
 					}
 
@@ -47,8 +44,7 @@ internal class DeleteOldFiles
 
 				Progress.HideProgressBar();
 			}
-			catch (Exception ex)
-			{
+			catch(Exception ex) {
 				Progress.AddLog(ex.StackTrace);
 				Progress.HideProgressBar("!Error!");
 			}

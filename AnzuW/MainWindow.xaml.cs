@@ -1,42 +1,33 @@
-﻿#region copyright
-
-// (c) 2019 Nelu & 601 (github.com/NeluQi)
+﻿// (c) 2019 Nelu & 601 (github.com/NeluQi)
 // This code is licensed under MIT license (see LICENSE for details)
 
-#endregion copyright
+namespace Anzu {
+	using System;
+	using System.Diagnostics;
+	using System.Threading;
+	using System.Windows;
+	using System.Windows.Input;
 
-using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Windows;
-using System.Windows.Input;
-using WinForms = System.Windows.Forms;
+	using WinForms = System.Windows.Forms;
 
-namespace Anzu
-{
 	/// <summary>
 	/// Логика взаимодействия для MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
-	{
+	public partial class MainWindow : Window {
 		/// <summary>
 		/// BG Thread
 		/// </summary>
 		public static Thread BGThread;
 
 		/// <summary>
-		/// MainWindow
+		/// Initializes a new instance of the <see cref="MainWindow"/> class.
 		/// </summary>
-		public MainWindow()
-		{
-			if (Environment.GetCommandLineArgs().Length > 1)
-			{
+		public MainWindow() {
+			if(Environment.GetCommandLineArgs().Length > 1) {
 				var CommandLinePasre = new ControllerCommand(Environment.GetCommandLineArgs());
 				System.Environment.Exit(0);
 			}
-			else
-			{
+			else {
 				InitializeComponent();
 				MainBackupFolderTextBox.Text = Properties.Settings.Default.MainBackupFolder;
 				ProgressPanel.Visibility = Visibility.Collapsed;
@@ -46,8 +37,7 @@ namespace Anzu
 				OldDayTextBox.PreviewTextInput += new TextCompositionEventHandler(OnlyNum);
 				FOldDayTextBox.PreviewTextInput += new TextCompositionEventHandler(OnlyNum);
 
-				switch (Properties.Settings.Default.ComLvl)
-				{
+				switch(Properties.Settings.Default.ComLvl) {
 					case 0:
 						CompressionNope.IsChecked = true;
 						break;
@@ -80,14 +70,17 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_Desktop(object sender, RoutedEventArgs e)
-		{
+		private void Button_Click_Desktop(object sender, RoutedEventArgs e) {
 			new WindowController(WindowController.Windows.Desktop);
 		}
 
-		private void OnlyNum(object sender, TextCompositionEventArgs e)
-		{
-			if (!char.IsDigit(e.Text, e.Text.Length - 1))
+		/// <summary>
+		/// The OnlyNum
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="TextCompositionEventArgs"/></param>
+		private void OnlyNum(object sender, TextCompositionEventArgs e) {
+			if(!char.IsDigit(e.Text, e.Text.Length - 1))
 				e.Handled = true;
 		}
 
@@ -96,15 +89,12 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_DesktopBackup(object sender, RoutedEventArgs e)
-		{
-			if (String.IsNullOrWhiteSpace(Properties.Settings.Default.MainBackupFolder))
-			{
+		private void Button_Click_DesktopBackup(object sender, RoutedEventArgs e) {
+			if(String.IsNullOrWhiteSpace(Properties.Settings.Default.MainBackupFolder)) {
 				MessageBox.Show("You need to install the main backup folder in the settings", "Error",
 				MessageBoxButton.OK, MessageBoxImage.Error);
 			}
-			else
-			{
+			else {
 				var bk = new Backup();
 				bk.BackupFolder("Desktop", new string[] { Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory).ToString(), Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory) }, DesktopDelFileCheck.IsChecked.Value);
 			}
@@ -115,8 +105,7 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_Download(object sender, RoutedEventArgs e)
-		{
+		private void Button_Click_Download(object sender, RoutedEventArgs e) {
 			new WindowController(WindowController.Windows.Download);
 		}
 
@@ -125,15 +114,12 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_DownloadSort(object sender, RoutedEventArgs e)
-		{
-			if (String.IsNullOrWhiteSpace(Properties.Settings.Default.MainBackupFolder))
-			{
+		private void Button_Click_DownloadSort(object sender, RoutedEventArgs e) {
+			if(String.IsNullOrWhiteSpace(Properties.Settings.Default.MainBackupFolder)) {
 				MessageBox.Show("You need to install the main backup folder in the settings", "Error",
 				MessageBoxButton.OK, MessageBoxImage.Error);
 			}
-			else
-			{
+			else {
 				var bk = new Sort();
 				bk.SortFolder(DelFiles.IsChecked.Value, SortExtended.IsChecked.Value, KnownFolders.GetPath(KnownFolder.Downloads));
 			}
@@ -144,13 +130,16 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_Folder(object sender, RoutedEventArgs e)
-		{
+		private void Button_Click_Folder(object sender, RoutedEventArgs e) {
 			new WindowController(WindowController.Windows.Folder);
 		}
 
-		private void Button_Click_HideProgress(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The Button_Click_HideProgress
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void Button_Click_HideProgress(object sender, RoutedEventArgs e) {
 			ProgressPanel.Visibility = Visibility.Collapsed;
 			DoneProgress.Visibility = Visibility.Collapsed;
 		}
@@ -160,12 +149,9 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_SelectMainBackupFolder(object sender, RoutedEventArgs e)
-		{
-			using (WinForms.FolderBrowserDialog dlg = new WinForms.FolderBrowserDialog())
-			{
-				if (dlg.ShowDialog() == WinForms.DialogResult.OK)
-				{
+		private void Button_Click_SelectMainBackupFolder(object sender, RoutedEventArgs e) {
+			using(WinForms.FolderBrowserDialog dlg = new WinForms.FolderBrowserDialog()) {
+				if(dlg.ShowDialog() == WinForms.DialogResult.OK) {
 					Properties.Settings.Default.MainBackupFolder = dlg.SelectedPath + @"\";
 					MainBackupFolderTextBox.Text = Properties.Settings.Default.MainBackupFolder;
 					Properties.Settings.Default.Save();
@@ -178,8 +164,7 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_Setting(object sender, RoutedEventArgs e)
-		{
+		private void Button_Click_Setting(object sender, RoutedEventArgs e) {
 			new WindowController(WindowController.Windows.Settings);
 		}
 
@@ -188,8 +173,7 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_StopOtherThread(object sender, RoutedEventArgs e)
-		{
+		private void Button_Click_StopOtherThread(object sender, RoutedEventArgs e) {
 			ProgressText.Content = "Wait for closing....";
 			ProgressStopbtn.IsEnabled = false;
 			BGThread.Abort();
@@ -200,13 +184,16 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Exit(object sender, RoutedEventArgs e)
-		{
+		private void Exit(object sender, RoutedEventArgs e) {
 			System.Windows.Application.Current.Shutdown();
 		}
 
-		private void Minimized(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The Minimized
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void Minimized(object sender, RoutedEventArgs e) {
 			this.WindowState = WindowState.Minimized;
 		}
 
@@ -215,8 +202,7 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-		{
+		private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
 			this.DragMove();
 		}
 
@@ -225,8 +211,7 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_DesktopSort(object sender, RoutedEventArgs e)
-		{
+		private void Button_Click_DesktopSort(object sender, RoutedEventArgs e) {
 			var bk = new Sort();
 			bk.SortFolder(DSortExtension.IsChecked.Value, false, Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
 			bk.SortFolder(DSortExtension.IsChecked.Value, false, Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory));
@@ -237,21 +222,17 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_DownloadDelOld(object sender, RoutedEventArgs e)
-		{
+		private void Button_Click_DownloadDelOld(object sender, RoutedEventArgs e) {
 			var dk = new DeleteOldFiles();
 			int day = -1;
-			try
-			{
+			try {
 				day = Convert.ToInt32(OldDayTextBox.Text);
-				if (day <= 0 || day >= 1000)
-				{
+				if(day <= 0 || day >= 1000) {
 					throw new Exception("Not valid days");
 				}
 				dk.Delete(day, KnownFolders.GetPath(KnownFolder.Downloads));
 			}
-			catch (Exception)
-			{
+			catch(Exception) {
 				MessageBox.Show("Not valid days", "Error",
 				MessageBoxButton.OK, MessageBoxImage.Error);
 			}
@@ -262,13 +243,10 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Button_Click_SortFolder(object sender, RoutedEventArgs e)
-		{
-			using (WinForms.FolderBrowserDialog dlg = new WinForms.FolderBrowserDialog())
-			{
+		private void Button_Click_SortFolder(object sender, RoutedEventArgs e) {
+			using(WinForms.FolderBrowserDialog dlg = new WinForms.FolderBrowserDialog()) {
 				string path = null;
-				if (dlg.ShowDialog() == WinForms.DialogResult.OK)
-				{
+				if(dlg.ShowDialog() == WinForms.DialogResult.OK) {
 					path = dlg.SelectedPath + @"\";
 
 					var bk = new Sort();
@@ -277,28 +255,27 @@ namespace Anzu
 			}
 		}
 
-		private void Button_Click_DelOldFolder(object sender, RoutedEventArgs e)
-		{
-			using (WinForms.FolderBrowserDialog dlg = new WinForms.FolderBrowserDialog())
-			{
+		/// <summary>
+		/// The Button_Click_DelOldFolder
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void Button_Click_DelOldFolder(object sender, RoutedEventArgs e) {
+			using(WinForms.FolderBrowserDialog dlg = new WinForms.FolderBrowserDialog()) {
 				string path = null;
-				if (dlg.ShowDialog() == WinForms.DialogResult.OK)
-				{
+				if(dlg.ShowDialog() == WinForms.DialogResult.OK) {
 					path = dlg.SelectedPath + @"\";
 
 					var sk = new DeleteOldFiles();
 					int day = -1;
-					try
-					{
+					try {
 						day = Convert.ToInt32(FOldDayTextBox.Text);
-						if (day <= 0 || day >= 1000)
-						{
+						if(day <= 0 || day >= 1000) {
 							throw new Exception("Not valid days");
 						}
 						sk.Delete(day, path);
 					}
-					catch (Exception)
-					{
+					catch(Exception) {
 						MessageBox.Show("Not valid days", "Error",
 						MessageBoxButton.OK, MessageBoxImage.Error);
 					}
@@ -306,23 +283,39 @@ namespace Anzu
 			}
 		}
 
-		private void Border_DragEnter(object sender, DragEventArgs e)
-		{
+		/// <summary>
+		/// The Border_DragEnter
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="DragEventArgs"/></param>
+		private void Border_DragEnter(object sender, DragEventArgs e) {
 			DropSortFiles.Visibility = Visibility.Visible;
 		}
 
-		private void Border_DragLeave(object sender, DragEventArgs e)
-		{
+		/// <summary>
+		/// The Border_DragLeave
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="DragEventArgs"/></param>
+		private void Border_DragLeave(object sender, DragEventArgs e) {
 			DropSortFiles.Visibility = Visibility.Collapsed;
 		}
 
-		private void Border_DragEnter_1(object sender, DragEventArgs e)
-		{
+		/// <summary>
+		/// The Border_DragEnter_1
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="DragEventArgs"/></param>
+		private void Border_DragEnter_1(object sender, DragEventArgs e) {
 			DropOldFiles.Visibility = Visibility.Visible;
 		}
 
-		private void Border_DragLeave_1(object sender, DragEventArgs e)
-		{
+		/// <summary>
+		/// The Border_DragLeave_1
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="DragEventArgs"/></param>
+		private void Border_DragLeave_1(object sender, DragEventArgs e) {
 			DropOldFiles.Visibility = Visibility.Collapsed;
 		}
 
@@ -331,14 +324,11 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Border_Drop(object sender, DragEventArgs e)
-		{
+		private void Border_Drop(object sender, DragEventArgs e) {
 			string[] Args = (string[])e.Data.GetData(DataFormats.FileDrop, true);
 			DropSortFiles.Visibility = Visibility.Collapsed;
-			foreach (var path in Args)
-			{
-				if (System.IO.Directory.Exists(path))
-				{
+			foreach(var path in Args) {
+				if(System.IO.Directory.Exists(path)) {
 					var bk = new Sort();
 					bk.SortFolder(true, SortExtendedFolder.IsChecked.Value, path);
 					break;
@@ -351,27 +341,21 @@ namespace Anzu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void Border_Drop_1(object sender, DragEventArgs e)
-		{
+		private void Border_Drop_1(object sender, DragEventArgs e) {
 			string[] Args = (string[])e.Data.GetData(DataFormats.FileDrop, true);
 			DropOldFiles.Visibility = Visibility.Collapsed;
-			foreach (var path in Args)
-			{
-				if (System.IO.Directory.Exists(path))
-				{
+			foreach(var path in Args) {
+				if(System.IO.Directory.Exists(path)) {
 					var sk = new DeleteOldFiles();
 					int day = -1;
-					try
-					{
+					try {
 						day = Convert.ToInt32(FOldDayTextBox.Text);
-						if (day <= 0 || day >= 1000)
-						{
+						if(day <= 0 || day >= 1000) {
 							throw new Exception("Not valid days");
 						}
 						sk.Delete(day, path);
 					}
-					catch (Exception)
-					{
+					catch(Exception) {
 						MessageBox.Show("Not valid days", "Error",
 						MessageBoxButton.OK, MessageBoxImage.Error);
 					}
@@ -379,8 +363,12 @@ namespace Anzu
 			}
 		}
 
-		private void CompressionNope_Checked(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The CompressionNope_Checked
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void CompressionNope_Checked(object sender, RoutedEventArgs e) {
 			CompressionDefault.IsChecked = false;
 			CompressionLevel1.IsChecked = false;
 			CompressionLevel4.IsChecked = false;
@@ -390,8 +378,12 @@ namespace Anzu
 			Properties.Settings.Default.Save();
 		}
 
-		private void CompressionDefault_Checked(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The CompressionDefault_Checked
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void CompressionDefault_Checked(object sender, RoutedEventArgs e) {
 			CompressionNope.IsChecked = false;
 			CompressionLevel1.IsChecked = false;
 			CompressionLevel4.IsChecked = false;
@@ -401,8 +393,12 @@ namespace Anzu
 			Properties.Settings.Default.Save();
 		}
 
-		private void CompressionLevel1_Checked(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The CompressionLevel1_Checked
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void CompressionLevel1_Checked(object sender, RoutedEventArgs e) {
 			CompressionNope.IsChecked = false;
 			CompressionDefault.IsChecked = false;
 			CompressionLevel4.IsChecked = false;
@@ -412,8 +408,12 @@ namespace Anzu
 			Properties.Settings.Default.Save();
 		}
 
-		private void CompressionLevel4_Checked(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The CompressionLevel4_Checked
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void CompressionLevel4_Checked(object sender, RoutedEventArgs e) {
 			CompressionNope.IsChecked = false;
 			CompressionDefault.IsChecked = false;
 			CompressionLevel1.IsChecked = false;
@@ -423,8 +423,12 @@ namespace Anzu
 			Properties.Settings.Default.Save(); ;
 		}
 
-		private void CompressionBestSpeed_Checked(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The CompressionBestSpeed_Checked
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void CompressionBestSpeed_Checked(object sender, RoutedEventArgs e) {
 			CompressionNope.IsChecked = false;
 			CompressionDefault.IsChecked = false;
 			CompressionLevel1.IsChecked = false;
@@ -434,8 +438,12 @@ namespace Anzu
 			Properties.Settings.Default.Save();
 		}
 
-		private void CompressionBestCompression_Checked(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The CompressionBestCompression_Checked
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void CompressionBestCompression_Checked(object sender, RoutedEventArgs e) {
 			CompressionNope.IsChecked = false;
 			CompressionDefault.IsChecked = false;
 			CompressionLevel1.IsChecked = false;
@@ -445,8 +453,12 @@ namespace Anzu
 			Properties.Settings.Default.Save();
 		}
 
-		private void Hyperlink_Click(object sender, RoutedEventArgs e)
-		{
+		/// <summary>
+		/// The Hyperlink_Click
+		/// </summary>
+		/// <param name="sender">The sender<see cref="object"/></param>
+		/// <param name="e">The e<see cref="RoutedEventArgs"/></param>
+		private void Hyperlink_Click(object sender, RoutedEventArgs e) {
 			Process.Start("https://github.com/NeluQi");
 		}
 	}
