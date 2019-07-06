@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 /// <summary>
@@ -7,38 +7,27 @@ using System.Runtime.InteropServices;
 /// installed.
 /// <KnownFolder.Contacts></KnownFolder.Contacts>
 /// </summary>
-public enum KnownFolder
-{
+public enum KnownFolder {
 	///<summary>Contacts</summary>
 	Contacts,
-
 	///<summary>Desktop</summary>
 	Desktop,
-
 	///<summary>Documents</summary>
 	Documents,
-
 	///<summary>Downloads</summary>
 	Downloads,
-
 	///<summary>Favorites</summary>
 	Favorites,
-
 	///<summary>Links</summary>
 	Links,
-
 	///<summary>Music</summary>
 	Music,
-
 	///<summary>Pictures</summary>
 	Pictures,
-
 	///<summary>SavedGames</summary>
 	SavedGames,
-
 	///<summary>SavedSearches</summary>
 	SavedSearches,
-
 	///<summary>Videos</summary>
 	Videos
 }
@@ -46,8 +35,10 @@ public enum KnownFolder
 /// <summary>
 /// Class containing methods to retrieve specific file system paths.
 /// </summary>
-public static class KnownFolders
-{
+public static class KnownFolders {
+	/// <summary>
+	/// Defines the _knownFolderGuids
+	/// </summary>
 	private static string[] _knownFolderGuids = new string[]
 	{
 		"{56784854-C6CB-462B-8169-88E350ACB882}", // Contacts
@@ -63,18 +54,59 @@ public static class KnownFolders
         "{18989B1D-99B5-455B-841C-AB7C74E4DDFC}", // Videos
     };
 
+	/// <summary>
+	/// Defines the KnownFolderFlags
+	/// </summary>
 	[Flags]
-	private enum KnownFolderFlags : uint
-	{
+	private enum KnownFolderFlags : uint {
+		/// <summary>
+		/// Defines the SimpleIDList
+		/// </summary>
 		SimpleIDList = 0x00000100,
+
+		/// <summary>
+		/// Defines the NotParentRelative
+		/// </summary>
 		NotParentRelative = 0x00000200,
+
+		/// <summary>
+		/// Defines the DefaultPath
+		/// </summary>
 		DefaultPath = 0x00000400,
+
+		/// <summary>
+		/// Defines the Init
+		/// </summary>
 		Init = 0x00000800,
+
+		/// <summary>
+		/// Defines the NoAlias
+		/// </summary>
 		NoAlias = 0x00001000,
+
+		/// <summary>
+		/// Defines the DontUnexpand
+		/// </summary>
 		DontUnexpand = 0x00002000,
+
+		/// <summary>
+		/// Defines the DontVerify
+		/// </summary>
 		DontVerify = 0x00004000,
+
+		/// <summary>
+		/// Defines the Create
+		/// </summary>
 		Create = 0x00008000,
+
+		/// <summary>
+		/// Defines the NoAppcontainerRedirection
+		/// </summary>
 		NoAppcontainerRedirection = 0x00010000,
+
+		/// <summary>
+		/// Defines the AliasOnly
+		/// </summary>
 		AliasOnly = 0x80000000
 	}
 
@@ -84,10 +116,7 @@ public static class KnownFolders
 	/// </summary>
 	/// <param name="knownFolder">The known folder which current path will be returned.</param>
 	/// <returns>The default path of the known folder.</returns>
-	/// <exception cref="System.Runtime.InteropServices.ExternalException">Thrown if the path
-	///     could not be retrieved.</exception>
-	public static string GetPath(KnownFolder knownFolder)
-	{
+	public static string GetPath(KnownFolder knownFolder) {
 		return GetPath(knownFolder, false);
 	}
 
@@ -96,34 +125,42 @@ public static class KnownFolders
 	/// not require the folder to be existent.
 	/// </summary>
 	/// <param name="knownFolder">The known folder which current path will be returned.</param>
-	/// <param name="defaultUser">Specifies if the paths of the default user (user profile
-	///     template) will be used. This requires administrative rights.</param>
+	/// <param name="defaultUser">The defaultUser<see cref="bool"/></param>
 	/// <returns>The default path of the known folder.</returns>
-	/// <exception cref="System.Runtime.InteropServices.ExternalException">Thrown if the path
-	///     could not be retrieved.</exception>
-	public static string GetPath(KnownFolder knownFolder, bool defaultUser)
-	{
+	public static string GetPath(KnownFolder knownFolder, bool defaultUser) {
 		return GetPath(knownFolder, KnownFolderFlags.DontVerify, defaultUser);
 	}
 
+	/// <summary>
+	/// The GetPath
+	/// </summary>
+	/// <param name="knownFolder">The knownFolder<see cref="KnownFolder"/></param>
+	/// <param name="flags">The flags<see cref="KnownFolderFlags"/></param>
+	/// <param name="defaultUser">The defaultUser<see cref="bool"/></param>
+	/// <returns>The <see cref="string"/></returns>
 	private static string GetPath(KnownFolder knownFolder, KnownFolderFlags flags,
-		bool defaultUser)
-	{
+		bool defaultUser) {
 		int result = SHGetKnownFolderPath(new Guid(_knownFolderGuids[(int)knownFolder]),
 			(uint)flags, new IntPtr(defaultUser ? -1 : 0), out IntPtr outPath);
-		if (result >= 0)
-		{
+		if(result >= 0) {
 			string path = Marshal.PtrToStringUni(outPath);
 			Marshal.FreeCoTaskMem(outPath);
 			return path;
 		}
-		else
-		{
+		else {
 			throw new ExternalException("Unable to retrieve the known folder path. It may not "
 				+ "be available on this system.", result);
 		}
 	}
 
+	/// <summary>
+	/// The SHGetKnownFolderPath
+	/// </summary>
+	/// <param name="rfid">The rfid<see cref="Guid"/></param>
+	/// <param name="dwFlags">The dwFlags<see cref="uint"/></param>
+	/// <param name="hToken">The hToken<see cref="IntPtr"/></param>
+	/// <param name="ppszPath">The ppszPath<see cref="IntPtr"/></param>
+	/// <returns>The <see cref="int"/></returns>
 	[DllImport("Shell32.dll")]
 	private static extern int SHGetKnownFolderPath(
 		[MarshalAs(UnmanagedType.LPStruct)]Guid rfid, uint dwFlags, IntPtr hToken,
